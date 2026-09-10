@@ -1,17 +1,15 @@
-import express from "express";
+import app from "./app.js";
+import "./config/dns.js";
 
+import {env} from "./config/env.js";
+import {connectDatabase} from "./config/database.js";
 
-const app = express();
+const startServer = async() => {
+    await connectDatabase();
 
-const PORT = process.env.PORT || 3000;
-
-app.get("/api/health", (req,res) => {
-    res.json({
-        status: "healthy",
-        service: "API Sentinel Server",
+    app.listen(env.PORT, () => {
+        console.log(`API Sentinel server running on port ${env.PORT}`);
     });
-});
+};
 
-app.listen(PORT, () => {
-    console.log(`API Sentinel server running on port ${PORT}`);
-});
+startServer();
