@@ -7,10 +7,9 @@ import rateLimit from "express-rate-limit";
 import {env} from "./config/env.js";
 import {errorMiddleware} from "./middleware/error.middleware.js";
 import {notFoundMiddleware} from "./middleware/notFound.middleware.js";
-import { validate } from "./middleware/validate.middleware.js";
-import { testSchema } from "./validation/test.schema.js";
+
 import authRoutes from "./modules/auth/auth.routes.js";
-import { authMiddleware } from "./middleware/auth.middleware.js";
+import monitorRoutes from "./modules/monitors/monitor.routes.js"
 
 const app = express();
 
@@ -55,28 +54,13 @@ app.get("/api/health", (req, res) => {
     });
 });
 
-app.get("/api/auth/test-protected", authMiddleware, (req, res) => {
-  res.status(200).json({
-    success: true,
-    data: {
-      message: "Authentication successful",
-      userId: req.user.id,
-    },
-  });
-});
 
-app.post("/api/test-validation", validate(testSchema), (req, res) => {
-  res.status(200).json({
-    success: true,
-    data: {
-      message: "Validation successful",
-      received: req.validate.body,
-    },
-  });
-});
 
 // auth routes
 app.use("/api/auth", authRoutes);
+
+// monitor routes
+app.use("/api/monitors", monitorRoutes);
 
 // 404 Handling
 app.use(notFoundMiddleware);

@@ -6,7 +6,7 @@ import { env } from "../../config/env.js";
 
 export const register = async (req, res, next) => {
     try {
-        const { email, password } = req.validate.body;
+        const { email, password } = req.validated.body;
 
         const existingUser = await User.findOne({ email });
 
@@ -43,7 +43,7 @@ export const register = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
     try {
-        const { email, password } = req.validate.body;
+        const { email, password } = req.validated.body;
 
         const user = await User.findOne({ email });
 

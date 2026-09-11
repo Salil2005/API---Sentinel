@@ -10,11 +10,12 @@ export const  validate = (schema) => {
             return res.status(400).json({
                 success: false,
                 status: "validation error",
+                code: 400,
                 details: result.error.issues,
             });
         }
 
-        req.validate = result.data;
+        req.validated = result.data;
 
         next();
     };
