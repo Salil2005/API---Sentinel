@@ -1,10 +1,13 @@
 import axios from "axios";
+import { validateMonitorUrl } from "./url-validation.service.js";
 
 export const executeMonitorCheck = async (monitor) => {
     const checkedAt = new Date();
     const startTime = Date.now();
 
     try{
+        await validateMonitorUrl(monitor.url);
+
         const response = await axios({
         method: monitor.method,
         url: monitor.url,
@@ -40,16 +43,15 @@ export const executeMonitorCheck = async (monitor) => {
 
         let errorType = "REQUEST_ERROR";
 
-        if(error.code == "ECONNABORTED"){
-            errorType = "TIMEOUT" ;
-        }
-        else if (error.code === "ENOTFOUND") {
+        if (error.code = "SSRF_BLOCKED") {
+            errorType = "SSRF_BLOCKED";
+        } else if (error.code === "ECONNABORTED") {
+            errorType = "TIMEOUT";
+        } else if (error.code === "ENOTFOUND") {
             errorType = "DNS_ERROR";
-        } 
-        else if (error.code === "ECONNREFUSED") {
+        } else if (error.code === "ECONNREFUSED") {
             errorType = "CONNECTION_REFUSED";
         }
-
          return {
             monitorId: monitor._id,
             checkedAt,

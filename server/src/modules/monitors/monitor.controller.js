@@ -1,4 +1,4 @@
-import {Monitor} from "./monitor.model.js" 
+import {Monitor} from "./monitor.model.js"; 
 
 export const createMonitor = async (req, res, next) => {
     try{
@@ -8,6 +8,7 @@ export const createMonitor = async (req, res, next) => {
             ...monitorData,
             userId: req.user.id,
         });
+
 
         return res.status(201).json({
             success: true,
