@@ -1,20 +1,21 @@
 import dns from "node:dns";
-dns.setServers(["8.8.8.8", "1.1.1.1"]) ;
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 import { monitorQueue } from "./queues/monitor.queue.js";
 import { Monitor } from "../../server/src/modules/monitors/monitor.model.js";
 import { connectDatabase } from "./config/database.js";
 
 const testMonitorJob = async () => {
-    try{
+    try {
         await connectDatabase();
 
         const monitor = await Monitor.findOne({
+            name: "Test API - Error",
             active: true,
         });
 
-        if(!monitor){
-            console.log("No active monitor found");
+        if (!monitor) {
+            console.log("Test API - Error monitor not found");
             process.exit(0);
         }
 
@@ -29,13 +30,10 @@ const testMonitorJob = async () => {
 
         await monitorQueue.close();
         process.exit(0);
-
-    }
-    catch(error){
+    } catch (error) {
         console.error("Failed to add monitoring job:", error);
 
         await monitorQueue.close();
-
         process.exit(1);
     }
 };

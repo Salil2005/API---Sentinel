@@ -65,6 +65,11 @@ const monitorSchema = new mongoose.Schema({
       min: 1,
       default: 3,
     },
+    consecutiveFailures: {
+        type: Number,
+        min: 0,
+        default: 0,
+    },
     active: {
         type: Boolean,
         default: true,

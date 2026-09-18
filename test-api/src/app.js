@@ -66,4 +66,12 @@ app.get("/random", (_req, res) => {
     });
 });
 
+app.get("/incident-test", (_req, res) => {
+    res.status(500).json({
+        success: false,
+        error: "Simulated incident failure",
+        code: 500,
+    });
+});
+
 export default app ;

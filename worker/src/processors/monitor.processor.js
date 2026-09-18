@@ -1,6 +1,7 @@
 import { Monitor } from "../../../server/src/modules/monitors/monitor.model.js";
 import { executeMonitorCheck } from "../services/monitor.service.js";
 import { saveCheckResult } from "../services/check-result.service.js";
+import { handleMonitorResult } from "../services/incident.service.js";
 
 export const processMonitorJob = async (job) => {
   const { monitorId } = job.data;
@@ -29,6 +30,8 @@ export const processMonitorJob = async (job) => {
   const result = await executeMonitorCheck(monitor);
 
   const savedResult = await saveCheckResult(result);
+
+  await handleMonitorResult(monitor, savedResult);
 
   console.log(
     `[MonitorJob] check-result | jobId=${job.id} | monitorId=${monitor._id} | status=${

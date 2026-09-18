@@ -1,5 +1,6 @@
 import dns from "node:dns/promises";
 import net from "node:net";
+import { env } from "../config/env.js";
 
 const PRIVATE_IPV4_RANGES = [
     /^10\./,
@@ -29,6 +30,15 @@ const createSsrfError = (message) => {
     return error;
 };
 
+const isAllowedDevelopmentUrl = (parsedUrl) => {
+    return (
+        env.NODE_ENV === "development" &&
+        parsedUrl.protocol === "http:" &&
+        parsedUrl.hostname.toLowerCase() === "localhost" &&
+        parsedUrl.port === "4000"
+    );
+};
+
 export const validateMonitorUrl = async (url) => {
     let parsedUrl;
 
@@ -45,6 +55,11 @@ export const validateMonitorUrl = async (url) => {
     }
 
     const hostname = parsedUrl.hostname.toLowerCase();
+
+    if (isAllowedDevelopmentUrl(parsedUrl)) {
+        return true;
+    }
+
 
     if (
         hostname === "localhost" ||
